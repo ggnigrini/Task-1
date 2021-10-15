@@ -1,0 +1,24 @@
+//Q.2.1
+public abstract class Tile
+        {
+            protected int x; private int y;
+            protected enum TileTypeEnum { Hero, Enemy, Gold, Weapon }
+            protected int GetX() { return x; }
+            protected int GetY() { return y; }
+
+            public Tile(int X, int Y)
+            {
+                x = X;
+                y = Y;
+            }
+        }
+
+        public class Obstacle : Tile
+        {
+            public Obstacle(int X, int Y) : base(X, Y) { }
+        }
+
+        public class EmptyTile : Tile
+        {
+            public EmptyTile(int X, int Y) : base(X, Y) { }
+        }
