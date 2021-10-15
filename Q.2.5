@@ -1,0 +1,33 @@
+ //Q2.5
+        public class Goblin : Enemy
+        {
+            public Goblin(int X, int Y) : base(X, Y, 10, 1) { }
+
+            public override MovementEnum ReturnMove(MovementEnum move = 0)
+            {
+                // Find a valid move position
+                Random rand = new Random();
+                int MovementDirection;
+                bool isValid = false;
+                do
+                {
+                    MovementDirection = rand.Next(0, 3);
+                    if (Vision[MovementDirection] is EmptyTile)
+                        isValid = true;
+                } while (!isValid);
+
+                switch (MovementDirection)
+                {
+                    case 0:
+                        return MovementEnum.Up;
+                    case 1:
+                        return MovementEnum.Down;
+                    case 2:
+                        return MovementEnum.Right;
+                    case 3:
+                        return MovementEnum.Left;
+                    default:
+                        return MovementEnum.NoMovement;
+                }
+            }
+        }
