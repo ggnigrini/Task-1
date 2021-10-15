@@ -1,0 +1,15 @@
+   //Q.2.4
+        public abstract class Enemy : Character
+        {
+            public Enemy(int X, int Y, int startingHP, int damage) : base(X, Y)
+            {
+                maxHP = hP = startingHP;
+                this.damage = damage;
+            }
+
+            public override string ToString()
+            {
+                string output = this.GetType().ToString() + " at [" + x + ", " + y + "] (" + damage + ")";
+                return output;
+            }
+        }
