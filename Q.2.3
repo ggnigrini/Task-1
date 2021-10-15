@@ -1,0 +1,53 @@
+//Q2.3
+            public Character(int X, int Y) : base(X, Y)
+            {
+                Vision = new Tile[4];
+            }
+            public virtual void Attack(Character target)
+            {
+                target.hP -= damage;
+                if (target.hP < 0)
+                    target.hP = 0;
+            }
+            public bool IsDead()
+            {
+                if (hP > 0)
+                    return false;
+
+                return true;
+            }
+            public virtual bool CheckRange(Character target)
+            {
+                if (DistanceTo(target) <= 1)
+                    return true;
+
+                return false;
+            }
+            private int DistanceTo(Character target)
+            {
+                int distanceX = Math.Abs(target.GetX() - x);
+                int distanceY = Math.Abs(target.GetY() - y);
+
+                return (distanceX + distanceY);
+            }
+            public void Move(MovementEnum move)
+            {
+                switch (move)
+                {
+                    case MovementEnum.Up:
+                        y -= 1;
+                        break;
+                    case MovementEnum.Right:
+                        x += 1;
+                        break;
+                    case MovementEnum.Down:
+                        y += 1;
+                        break;
+                    case MovementEnum.Left:
+                        x -= 1;
+                        break;
+                }
+            }
+            public abstract MovementEnum ReturnMove(MovementEnum move = 0);
+            public abstract override string ToString();
+        }
