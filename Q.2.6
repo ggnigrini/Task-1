@@ -1,0 +1,57 @@
+ //Q.2.6
+        public class Hero : Character
+        {
+            public Hero(int X, int Y, int startingHP) : base(X, Y)
+            {
+                hP = maxHP = startingHP;
+                damage = 2;
+            }
+
+          
+            public override MovementEnum ReturnMove(MovementEnum move = MovementEnum.NoMovement)
+            {
+                bool isValid = false;
+                switch (move)
+                {
+                    case MovementEnum.Up:
+                        if (Vision[0] is EmptyTile)
+                            isValid = true;
+                        break;
+                    case MovementEnum.Down:
+                        if (Vision[1] is EmptyTile)
+                            isValid = true;
+                        break;
+                    case MovementEnum.Right:
+                        if (Vision[2] is EmptyTile)
+                            isValid = true;
+                        break;
+                    case MovementEnum.Left:
+                        if (Vision[3] is EmptyTile)
+                            isValid = true;
+                        break;
+                }
+
+                if (isValid)
+                    return move;
+
+                return MovementEnum.NoMovement;
+            }
+
+            public override string ToString()
+            {
+                string output = "Player Stats\n" +
+                                "HP: " + hP + "/" + maxHP + "\n" +
+                                "Damage: " + damage + "\n" +
+                                "[" + x + "," + y + "]";
+
+                return output;
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+    }
