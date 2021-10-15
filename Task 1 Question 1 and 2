@@ -1,0 +1,205 @@
+namespace GADS6112__Task_1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        //Q.2.1
+        public abstract class Tile
+        {
+            protected int x; private int y;
+            protected enum TileTypeEnum { Hero, Enemy, Gold, Weapon }
+            protected int GetX() { return x; }
+            protected int GetY() { return y; }
+
+            public Tile(int X, int Y)
+            {
+                x = X;
+                y = Y;
+            }
+        }
+
+        public class Obstacle : Tile
+        {
+            public Obstacle(int X, int Y) : base(X, Y) { }
+        }
+
+        public class EmptyTile : Tile
+        {
+            public EmptyTile(int X, int Y) : base(X, Y) { }
+        }
+
+        //Q.2.2
+        public abstract class Character : Tile
+        {
+            protected int hP;
+            protected int maxHP;
+            protected int damage;
+            protected Tile[] Vision;
+            public enum MovementEnum { NoMovement, Up, Down, Left, Right }
+
+            //Q.2.3
+            public Character(int X, int Y) : base(X, Y)
+            {
+                Vision = new Tile[4];
+            }
+            public virtual void Attack(Character target)
+            {
+                target.hP -= damage;
+                if (target.hP < 0)
+                    target.hP = 0;
+            }
+            public bool IsDead()
+            {
+                if (hP > 0)
+                    return false;
+
+                return true;
+            }
+            public virtual bool CheckRange(Character target)
+            {
+                if (DistanceTo(target) <= 1)
+                    return true;
+
+                return false;
+            }
+            private int DistanceTo(Character target)
+            {
+                int distanceX = Math.Abs(target.GetX() - x);
+                int distanceY = Math.Abs(target.GetY() - y);
+
+                return (distanceX + distanceY);
+            }
+            public void Move(MovementEnum move)
+            {
+                switch (move)
+                {
+                    case MovementEnum.Up:
+                        y -= 1;
+                        break;
+                    case MovementEnum.Right:
+                        x += 1;
+                        break;
+                    case MovementEnum.Down:
+                        y += 1;
+                        break;
+                    case MovementEnum.Left:
+                        x -= 1;
+                        break;
+                }
+            }
+            public abstract MovementEnum ReturnMove(MovementEnum move = 0);
+            public abstract override string ToString();
+        }
+
+        //Q.2.4
+        public abstract class Enemy : Character
+        {
+            public Enemy(int X, int Y, int startingHP, int damage) : base(X, Y)
+            {
+                maxHP = hP = startingHP;
+                this.damage = damage;
+            }
+
+            public override string ToString()
+            {
+                string output = this.GetType().ToString() + " at [" + x + ", " + y + "] (" + damage + ")";
+                return output;
+            }
+        }
+
+        //Q2.5
+        public class Goblin : Enemy
+        {
+            public Goblin(int X, int Y) : base(X, Y, 10, 1) { }
+
+            public override MovementEnum ReturnMove(MovementEnum move = 0)
+            {
+                // Find a valid move position
+                Random rand = new Random();
+                int MovementDirection;
+                bool isValid = false;
+                do
+                {
+                    MovementDirection = rand.Next(0, 3);
+                    if (Vision[MovementDirection] is EmptyTile)
+                        isValid = true;
+                } while (!isValid);
+
+                switch (MovementDirection)
+                {
+                    case 0:
+                        return MovementEnum.Up;
+                    case 1:
+                        return MovementEnum.Down;
+                    case 2:
+                        return MovementEnum.Right;
+                    case 3:
+                        return MovementEnum.Left;
+                    default:
+                        return MovementEnum.NoMovement;
+                }
+            }
+        }
+
+        //Q.2.6
+        public class Hero : Character
+        {
+            public Hero(int X, int Y, int startingHP) : base(X, Y)
+            {
+                hP = maxHP = startingHP;
+                damage = 2;
+            }
+
+          
+            public override MovementEnum ReturnMove(MovementEnum move = MovementEnum.NoMovement)
+            {
+                bool isValid = false;
+                switch (move)
+                {
+                    case MovementEnum.Up:
+                        if (Vision[0] is EmptyTile)
+                            isValid = true;
+                        break;
+                    case MovementEnum.Down:
+                        if (Vision[1] is EmptyTile)
+                            isValid = true;
+                        break;
+                    case MovementEnum.Right:
+                        if (Vision[2] is EmptyTile)
+                            isValid = true;
+                        break;
+                    case MovementEnum.Left:
+                        if (Vision[3] is EmptyTile)
+                            isValid = true;
+                        break;
+                }
+
+                if (isValid)
+                    return move;
+
+                return MovementEnum.NoMovement;
+            }
+
+            public override string ToString()
+            {
+                string output = "Player Stats\n" +
+                                "HP: " + hP + "/" + maxHP + "\n" +
+                                "Damage: " + damage + "\n" +
+                                "[" + x + "," + y + "]";
+
+                return output;
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+    }
+}
